@@ -183,7 +183,7 @@ nav.scrolled{background:rgba(3,6,15,.95)}
 
 /* PROJECTS */
 .pg{display:grid;grid-template-columns:repeat(2,1fr);gap:1.3rem}
-.pcard{background:var(--bg2);border:1px solid var(--border2);border-radius:17px;overflow:hidden;transition:all .35s;transform-style:preserve-3d;cursor:pointer;position:relative}
+.pcard{background:var(--bg2);border:1px solid var(--border2);border-radius:17px;overflow:hidden;transition:all .35s;transform-style:preserve-3d;cursor:pointer;position:relative;display:flex;flex-direction:column}
 .pcard::before,.pcard::after{content:'';position:absolute;width:40px;height:40px;pointer-events:none;z-index:10;opacity:0;transition:opacity .4s,transform .4s}
 .pcard::before{top:0;left:0;border-top:1.5px solid var(--cyan);border-left:1.5px solid var(--cyan);border-radius:17px 0 0 0;transform:translate(-8px,-8px)}
 .pcard::after{bottom:0;right:0;border-bottom:1.5px solid var(--blue);border-right:1.5px solid var(--blue);border-radius:0 0 17px 0;transform:translate(8px,8px)}
@@ -197,11 +197,11 @@ nav.scrolled{background:rgba(3,6,15,.95)}
 .pt.c2::before{background:linear-gradient(135deg,rgba(0,229,192,.1),rgba(79,142,247,.04))}
 .pt.c3::before{background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(79,142,247,.04))}
 .pt.c4::before{background:linear-gradient(135deg,rgba(192,132,252,.1),rgba(79,142,247,.04))}
-.pb{padding:1.4rem}
+.pb{padding:1.4rem;display:flex;flex-direction:column;flex:1}
 .ptags{display:flex;gap:.4rem;margin-bottom:.7rem;flex-wrap:wrap}
 .ptag{background:rgba(79,142,247,.07);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-family:'Space Mono',monospace;font-size:.56rem;color:var(--blue2);letter-spacing:.06em}
 .pt-t{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:.35rem}
-.pt-d{font-size:.78rem;color:var(--muted);line-height:1.65;margin-bottom:.9rem}
+.pt-d{font-size:.78rem;color:var(--muted);line-height:1.65;margin-bottom:.9rem;flex:1}
 .pt-lk{display:inline-flex;align-items:center;gap:.35rem;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--cyan);text-decoration:none;letter-spacing:.06em;transition:gap .2s}
 .pt-lk:hover{gap:.6rem}
 
@@ -774,11 +774,11 @@ footer .footer-credit span{
       </div>
       <div class="pb">
         <div class="ptags"><span class="ptag">Power BI</span><span class="ptag">Data Analysis</span><span class="ptag">JavaScript</span></div>
-        <div class="pt-t">University Dashboard</div>
-        <div class="pt-d">Interactive 10-year BI dashboard covering enrollment, graduation rates, 8.71M KD revenue, and dropout tracking with dynamic filters.</div>
+        <div class="pt-t">A.Faraj University Dashboard</div>
+        <div class="pt-d">Academic intelligence platform for A.Faraj University — 2,256 enrolled students, 1,537 graduates, multi-department analytics covering enrollment, grades, dropouts, faculty, facilities, career outcomes, and student funding with dynamic filters.</div>
         <div class="pcard-btns">
           <button class="pcard-btn about-btn" onclick="showProjectInfo('kcst')">About Project</button>
-          <a href="https://demokcstdashboard.netlify.app" target="_blank" class="pcard-btn enter-btn">Enter Project</a>
+          <a href="https://7mano71-cloud.github.io/university_Dashboard/" target="_blank" class="pcard-btn enter-btn">Enter Project</a>
         </div>
       </div>
     </div>
@@ -1102,18 +1102,18 @@ footer .footer-credit span{
 // Project Information Modal
 const projectInfo = {
   kcst: {
-    title: 'KCST Annual Report Dashboard',
-    description: 'A comprehensive Business Intelligence dashboard tracking 10 years of university data.',
+    title: 'a.faraj university',
+    description: 'A full academic intelligence platform for A.Faraj University — covering student enrollment, graduation, grades, dropouts, faculty, facilities, career outcomes, and funding with advanced dynamic filters.',
     details: [
-      '📊 Interactive Power BI visualizations',
-      '📈 10-year enrollment and graduation analytics',
-      '💰 Revenue tracking (8.71M KD total)',
-      '📉 Dropout rate analysis by department',
-      '🔄 Dynamic filtering across all departments',
-      '📱 Fully responsive design'
+      '🎓 2,256 enrolled students — Fall 2024-25',
+      '🏆 1,537 total graduates tracked across all programs',
+      '📊 Grades, dropout, special needs & program stats',
+      '🏛️ Facilities, faculty & career outcomes analytics',
+      '💳 Student funding breakdown (self, loan, govt, employer)',
+      '🔽 Dynamic filters: year, semester, program, gender, nationality'
     ],
-    tech: ['Power BI', 'JavaScript', 'Canvas', 'Data Analysis'],
-    url: 'https://demokcstdashboard.netlify.app'
+    tech: ['JavaScript', 'HTML5', 'CSS3', 'Chart.js', 'Data Analysis'],
+    url: 'https://7mano71-cloud.github.io/university_Dashboard/'
   },
   myzaan: {
     title: 'Myzaan — Personal Finance App',
@@ -1668,10 +1668,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closePhone()
     void main() {
         vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / min(resolution.y, resolution.x);
         float r = length(uv);
-        float angle = atan(uv.y, uv.x + 0.000001); 
         float t = time * 0.15;
-        float strength = fbm(vec2(angle * 2.5, r * 1.5 - t));
-        strength = pow(strength, 4.5) * 1.8;
+        // Use cartesian FBM to avoid atan() seam artifact
+        float strength = fbm(vec2(uv.x * 2.5 + t * 0.3, uv.y * 2.5 - t));
+        strength += 0.4 * fbm(vec2(uv.y * 1.8 - t * 0.5, uv.x * 1.8 + t * 0.2));
+        strength = pow(clamp(strength, 0.0, 1.0), 3.5) * 2.0;
         vec3 darkBlue = vec3(0.01, 0.02, 0.08);
         vec3 glowColor = mix(vec3(0.0, 0.3, 0.7), vec3(0.0, 0.6, 0.8), strength);
         vec3 finalColor = mix(darkBlue, glowColor, strength);
